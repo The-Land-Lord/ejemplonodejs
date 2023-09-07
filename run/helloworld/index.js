@@ -51,6 +51,28 @@ app.get('/', (req, res) => {
   }
 });
 
+app.post('/', (req, res) => {
+  if (req.method === 'POST' && req.url === '/') {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const num1 = new URLSearchParams(body).get('num1');
+      const num2 = new URLSearchParams(body).get('num2');
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
+      res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
+      return res.end();
+    });
+  } else {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Página no encontrada');
+  }
+});
+
+
 const port = parseInt(process.env.PORT) || 8080;
 app.listen(port, () => {
   console.log(`Hello, hello, hello, esta es mi prueba en el puerto  ${port}`);
