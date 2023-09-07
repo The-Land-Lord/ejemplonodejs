@@ -18,8 +18,37 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-  const name = process.env.NAME || 'World';
-  res.send(`Hello, hello, hello, esta es mi prueba en el puerto  ${port} ${name}!`);
+  if (req.method === 'GET' && req.url === '/') {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    res.write('<form method="POST">');
+    res.write('<label for="num1">Número 1:</label>');
+    res.write('<input type="number" id="num1" name="num1" required>');
+    res.write('<br>');
+    res.write('<label for="num2">Número 2:</label>');
+    res.write('<input type="number" id="num2" name="num2" required>');
+    res.write('<br>');
+    res.write('<button type="submit">Enviar</button>');
+    res.write('</form>');
+    return res.end();
+  } else if (req.method === 'POST' && req.url === '/') {
+    let body = '';
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+    req.on('end', () => {
+      const num1 = new URLSearchParams(body).get('num1');
+      const num2 = new URLSearchParams(body).get('num2');
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html');
+      res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
+      return res.end();
+    });
+  } else {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Página no encontrada');
+  }
 });
 
 const port = parseInt(process.env.PORT) || 8080;
