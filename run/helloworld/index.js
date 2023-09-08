@@ -83,10 +83,12 @@ const URLFinal = `$apiUrl location.latitude=${coor1}location.longitude=${coor2}&
   try {
     const response = await fetch(URLFinal);
     if (!response.ok) {
+      res.write(`Error  ${response.status}`);
       throw new Error(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
     console.log(data); // Aquí puedes ver la respuesta JSON en la consola
+    res.write(`Bien  $data`);
     // Utiliza 'data' para manipular o mostrar la información como desees
   } catch (error) {
     console.error('Error al obtener datos:', error);
