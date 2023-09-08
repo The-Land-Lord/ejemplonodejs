@@ -25,10 +25,10 @@ app.get('/', (req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.write('<form method="POST">');
     res.write('<label for="num1">Número 1:</label>');
-    res.write('<input type="number" id="num1" name="num1" required>');
+    res.write('<input type="number" id="num1" name="num1" step="any" required>');
     res.write('<br>');
     res.write('<label for="num2">Número 2:</label>');
-    res.write('<input type="number" id="num2" name="num2" required>');
+    res.write('<input type="number" id="num2" name="num2"  step="any" required>');
     res.write('<br>');
     res.write('<button type="submit">Enviar</button>');
     res.write('</form>');
