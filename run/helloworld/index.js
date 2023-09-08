@@ -19,6 +19,14 @@ const app = express();
 const apiUrl = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?';
 const APISolar = 'AIzaSyBjTgPR83CvhCr7qbxNtWAfSbpmtI9oolI';
 
+//Configuración Firestore
+const Firestore = require('@google-cloud/firestore');
+const db = new Firestore({
+  projectId: 'PruebaSolar2',
+  keyFilename: '/pruebasolar2-028fe05d30da.json',
+});
+
+
 app.get('/', (req, res) => {
   if (req.method === 'GET' && req.url === '/') {
     res.statusCode = 200;
@@ -86,6 +94,7 @@ const URLFinal = `${apiUrl}location.latitude=${coor1}&location.longitude=${coor2
      throw new Error(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
+    const adddata = await db.collection('Solar').add(data);
     console.log(data); // Aquí puedes ver la respuesta JSON en la consola
     // Utiliza 'data' para manipular o mostrar la información como desees
   } catch (error) {
