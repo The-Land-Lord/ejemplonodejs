@@ -16,6 +16,8 @@
 // [START run_helloworld_service]
 const express = require('express');
 const app = express();
+const apiUrl = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?';
+const APISolar = 'AIzaSyBjTgPR83CvhCr7qbxNtWAfSbpmtI9oolI';
 
 app.get('/', (req, res) => {
   if (req.method === 'GET' && req.url === '/') {
@@ -63,6 +65,7 @@ app.post('/', (req, res) => {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html');
       res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
+      solar(num1,num2);
       return res.end();
     });
   } else {
@@ -71,6 +74,24 @@ app.post('/', (req, res) => {
     res.end('Página no encontrada');
   }
 });
+
+
+
+// Función para obtener datos JSON de la API Solar
+async function solar(coor1, coor2) {
+const URLFinal = `$apiUrl location.latitude=${coor1}location.longitude=${coor2}&key=$APISolar`;
+  try {
+    const response = await fetch(URLFinal);
+    if (!response.ok) {
+      throw new Error(`Error en la solicitud: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data); // Aquí puedes ver la respuesta JSON en la consola
+    // Utiliza 'data' para manipular o mostrar la información como desees
+  } catch (error) {
+    console.error('Error al obtener datos:', error);
+  }
+}
 
 
 const port = parseInt(process.env.PORT) || 8080;
