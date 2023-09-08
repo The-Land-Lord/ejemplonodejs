@@ -79,15 +79,17 @@ app.post('/', (req, res) => {
 
 // Función para obtener datos JSON de la API Solar
 async function solar(coor1, coor2) {
-const URLFinal = `$apiUrl location.latitude=${coor1}location.longitude=${coor2}&key=$APISolar`;
+const URLFinal = `${apiUrl}location.latitude=${coor1}location.longitude=${coor2}&key=${APISolar}`;
   try {
     const response = await fetch(URLFinal);
     if (!response.ok) {
+      res.setHeader('Content-Type', 'text/html');
       res.write(`Error  ${response.status}`);
       throw new Error(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
     console.log(data); // Aquí puedes ver la respuesta JSON en la consola
+    res.setHeader('Content-Type', 'text/html');
     res.write(`Bien  $data`);
     // Utiliza 'data' para manipular o mostrar la información como desees
   } catch (error) {
