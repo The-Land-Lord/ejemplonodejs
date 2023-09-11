@@ -105,7 +105,7 @@ const URLFinal = `${apiUrl}location.latitude=${coor1}&location.longitude=${coor2
 
 const port = parseInt(process.env.PORT) || 8080;
 app.listen(port, () => {
-  console.log(`Hello, hello, hello, esta es mi prueba en el puerto  ${port}`);
+  console.log(`Iniciado en puerto ${port}`);
 });
 // [END run_helloworld_service]
 // [END cloudrun_helloworld_service]
