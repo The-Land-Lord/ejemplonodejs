@@ -23,7 +23,7 @@ const APISolar = 'AIzaSyBjTgPR83CvhCr7qbxNtWAfSbpmtI9oolI';
 const Firestore = require('@google-cloud/firestore');
 const db = new Firestore({
   projectId: 'PruebaSolar2',
-  keyFilename: '/run/helloworld/index.js/pruebasolar2-028fe05d30da.json',
+  keyFilename: '/run/helloworld/pruebasolar2-028fe05d30da.json',
 });
 
 app.use(express.urlencoded({ extended: true }));
