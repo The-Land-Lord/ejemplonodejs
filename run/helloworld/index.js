@@ -15,83 +15,50 @@
 // [START cloudrun_helloworld_service]
 // [START run_helloworld_service]
 const express = require('express');
+const fetch = require('node-fetch');
 const app = express();
 const apiUrl = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?';
 const APISolar = 'AIzaSyBjTgPR83CvhCr7qbxNtWAfSbpmtI9oolI';
 
-//Configuración Firestore
+// Configuración Firestore
 const Firestore = require('@google-cloud/firestore');
 const db = new Firestore({
   projectId: 'PruebaSolar2',
   keyFilename: '/pruebasolar2-028fe05d30da.json',
 });
 
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  if (req.method === 'GET' && req.url === '/') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<form method="POST">');
-    res.write('<label for="num1">Número 1:</label>');
-    res.write('<input type="number" id="num1" name="num1" step="any" required>');
-    res.write('<br>');
-    res.write('<label for="num2">Número 2:</label>');
-    res.write('<input type="number" id="num2" name="num2"  step="any" required>');
-    res.write('<br>');
-    res.write('<button type="submit">Enviar</button>');
-    res.write('</form>');
-    return res.end();
-  } else if (req.method === 'POST' && req.url === '/') {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      const num1 = new URLSearchParams(body).get('num1');
-      const num2 = new URLSearchParams(body).get('num2');
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html');
-      res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
-      return res.end();
-    });
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Página no encontrada');
-  }
+  res.setHeader('Content-Type', 'text/html');
+  res.write('<form method="POST">');
+  res.write('<label for="num1">Número 1:</label>');
+  res.write('<input type="number" id="num1" name="num1" step="any" required>');
+  res.write('<br>');
+  res.write('<label for="num2">Número 2:</label>');
+  res.write('<input type="number" id="num2" name="num2" step="any" required>');
+  res.write('<br>');
+  res.write('<button type="submit">Enviar</button>');
+  res.write('</form>');
+  res.end();
 });
 
-app.post('/', (req, res) => {
-  if (req.method === 'POST' && req.url === '/') {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      const num1 = new URLSearchParams(body).get('num1');
-      const num2 = new URLSearchParams(body).get('num2');
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html');
-      res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
-      solar(num1,num2);
-      return res.end();
-    });
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Página no encontrada');
-  }
+app.post('/', async (req, res) => {
+  const num1 = req.body.num1;
+  const num2 = req.body.num2;
+  res.setHeader('Content-Type', 'text/html');
+  res.write(`<p style="color: red;">Los números ingresados son: ${num1} y ${num2}</p>`);
+  await solar(num1, num2);
+  res.end();
 });
-
-
 
 // Función para obtener datos JSON de la API Solar
 async function solar(coor1, coor2) {
-const URLFinal = `${apiUrl}location.latitude=${coor1}&location.longitude=${coor2}&key=${APISolar}`;
+  const URLFinal = `${apiUrl}location.latitude=${coor1}&location.longitude=${coor2}&key=${APISolar}`;
   try {
     const response = await fetch(URLFinal);
     if (!response.ok) {
-     throw new Error(`Error en la solicitud: ${response.status}`);
+      throw new Error(`Error en la solicitud: ${response.status}`);
     }
     const data = await response.json();
     const adddata = await db.collection('Solar').add(data);
@@ -102,13 +69,10 @@ const URLFinal = `${apiUrl}location.latitude=${coor1}&location.longitude=${coor2
   }
 }
 
-
 const port = parseInt(process.env.PORT) || 8080;
 app.listen(port, () => {
   console.log(`Iniciado en puerto ${port}`);
 });
-// [END run_helloworld_service]
-// [END cloudrun_helloworld_service]
 
 // Exports for testing purposes.
 module.exports = app;
