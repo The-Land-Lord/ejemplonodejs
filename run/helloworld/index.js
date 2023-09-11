@@ -15,7 +15,6 @@
 // [START cloudrun_helloworld_service]
 // [START run_helloworld_service]
 const express = require('express');
-const fetch = require('node-fetch');
 const app = express();
 const apiUrl = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?';
 const APISolar = 'AIzaSyBjTgPR83CvhCr7qbxNtWAfSbpmtI9oolI';
