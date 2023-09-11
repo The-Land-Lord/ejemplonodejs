@@ -15,7 +15,8 @@
   "author": "Google LLC",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "@google-cloud/firestore": "^4.13.1"
   },
   "devDependencies": {
     "c8": "^8.0.0",
